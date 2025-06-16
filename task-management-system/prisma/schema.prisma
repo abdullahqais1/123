@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./data/app.db"
+}
+
+model Customer {
+  id          Int      @id @default(autoincrement())
+  name        String
+  contractEnd DateTime
+  createdAt   DateTime @default(now())
+  tasks       Task[]
+
+  @@map("customers")
+}
+
+model Task {
+  id         Int      @id @default(autoincrement())
+  title      String
+  details    String
+  term       String   // "قصير" or "طويل"
+  employee   String
+  done       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@map("tasks")
+}
